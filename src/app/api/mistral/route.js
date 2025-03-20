@@ -5,6 +5,8 @@ export async function POST(req) {
     const { message } = await req.json();
 
     const apiKey = process.env.MISTRAL_API_KEY;
+    console.log("MISTRAL_API_KEY:", apiKey ? "Loaded" : "Not Found"); // Debugging log
+
     if (!apiKey) {
       return NextResponse.json({ error: "Missing API Key" }, { status: 500 });
     }
@@ -16,7 +18,7 @@ export async function POST(req) {
         Authorization: `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        model: "mistral-small",  // You can change this to another model like mistral-medium
+        model: "mistral-small",  
         messages: [{ role: "user", content: message }],
       }),
     });
@@ -31,6 +33,7 @@ export async function POST(req) {
     return NextResponse.json({ reply });
 
   } catch (error) {
+    console.error("Error:", error); // Debugging log
     return NextResponse.json({ error: "Error connecting to Mistral API." }, { status: 500 });
   }
 }
